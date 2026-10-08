@@ -7,7 +7,7 @@ export default function HealthCheck() {
 
   useEffect(() => {
     // Calling the endpoint directly using axios to satisfy the requirement
-    axios.get('http://localhost:8080/api/health')
+    axios.get('https://cubesolve-backend.onrender.com/api/health')
       .then(res => setStatus(res.data))
       .catch(err => setError(err.message));
   }, []);
