@@ -1,0 +1,535 @@
+/* ============================================================
+   CubeSolve App.css — Component Specialization & Micro-interactions
+   Rubik's Cube Visual Identity
+   ============================================================ */
+
+/* ── Timer Display ── */
+.speed-timer {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.15s ease, text-shadow 0.3s ease;
+}
+
+.speed-timer.running {
+  color: #5AC8FA !important;
+  text-shadow: 0 0 30px rgba(90, 200, 250, 0.5), 0 0 60px rgba(90, 200, 250, 0.2);
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+.speed-timer.solved {
+  color: #30D158 !important;
+  text-shadow: 0 0 40px rgba(48, 209, 88, 0.6);
+}
+
+@keyframes timerPulse {
+  0%, 100% { text-shadow: 0 0 30px rgba(90, 200, 250, 0.5); }
+  50% { text-shadow: 0 0 50px rgba(90, 200, 250, 0.8), 0 0 80px rgba(90, 200, 250, 0.3); }
+}
+
+/* ── Scramble Box ── */
+.scramble-box {
+  background: rgba(11, 16, 32, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  color: #c4d0e8;
+  letter-spacing: 0.05em;
+  word-break: break-word;
+  line-height: 1.7;
+}
+
+/* ── Solved Celebration Overlay ── */
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 11, 20, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.celebration-modal {
+  background: linear-gradient(145deg, rgba(26, 34, 53, 0.97), rgba(11, 16, 32, 0.99));
+  border: 1px solid rgba(48, 209, 88, 0.3);
+  border-radius: 28px;
+  padding: 40px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7), 0 0 50px rgba(48, 209, 88, 0.2);
+  animation: solvedCelebration 0.5s var(--ease-spring) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.celebration-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #30D158, #FFD60A, #30D158, transparent);
+}
+
+/* ── Splash Screen ── */
+.splash-container {
+  position: fixed;
+  inset: 0;
+  background: #0B1020;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.splash-container.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Auth Animations ── */
+@keyframes authEntrance {
+  0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes authShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-7px); }
+  40%, 80% { transform: translateX(7px); }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(14px, -18px) scale(1.07); }
+}
+
+@keyframes checkmarkPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.auth-card-enter {
+  animation: authEntrance 0.5s var(--ease-smooth) forwards;
+}
+
+.auth-shake {
+  animation: authShake 0.4s ease;
+}
+
+.orb-animate-1 {
+  animation: orbFloat 9s ease-in-out infinite;
+}
+
+.orb-animate-2 {
+  animation: orbFloat 11s ease-in-out infinite reverse;
+}
+
+.orb-animate-3 {
+  animation: orbFloat 13s ease-in-out infinite 2s;
+}
+
+.checkmark-animate {
+  animation: checkmarkPop 0.45s var(--ease-spring) forwards;
+}
+
+.auth-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleFloat 6s ease-in-out infinite;
+  filter: blur(1px);
+}
+
+/* ── Dashboard Layouts ── */
+.dashboard-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .dashboard-hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 36px;
+  }
+}
+
+.dashboard-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+}
+
+/* ── Quick Action Cards ── */
+.quick-action-card {
+  padding: 20px 18px;
+  border-radius: 20px;
+  background: var(--surface-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all var(--t-normal) var(--ease-smooth);
+  text-decoration: none;
+  color: inherit;
+  min-height: 130px;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-action-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.3s ease;
+  border-radius: 20px 20px 0 0;
+}
+
+.quick-action-card.card-solve::after {
+  background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.8), transparent);
+}
+
+.quick-action-card.card-practice::after {
+  background: linear-gradient(90deg, transparent, rgba(48, 209, 88, 0.8), transparent);
+}
+
+.quick-action-card.card-history::after {
+  background: linear-gradient(90deg, transparent, rgba(191, 90, 242, 0.8), transparent);
+}
+
+.quick-action-card.card-stats::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 149, 0, 0.8), transparent);
+}
+
+.quick-action-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--surface-border-hover);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.quick-action-card:hover .action-card-arrow {
+  transform: translateX(4px);
+}
+
+.quick-action-card:active {
+  transform: scale(0.975) translateY(-2px);
+}
+
+.action-card-arrow {
+  transition: transform 0.2s var(--ease-spring), color 0.2s ease;
+}
+
+/* ── Hero Particles ── */
+@keyframes heroParticle1 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(10px, -14px) scale(1.3); opacity: 1; }
+}
+
+@keyframes heroParticle2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(-12px, 12px) scale(1.2); opacity: 0.85; }
+}
+
+.hero-particle-1 { animation: heroParticle1 7s ease-in-out infinite; }
+.hero-particle-2 { animation: heroParticle2 9s ease-in-out infinite reverse; }
+
+/* ── Stat Cards ── */
+.stat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+  padding: 18px;
+  transition: all var(--t-normal) var(--ease-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  opacity: 0.05;
+  transform: translate(20px, -20px);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--surface-border-hover);
+}
+
+/* ── History Solve Cards ── */
+.solve-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+  padding: 18px;
+  transition: all var(--t-normal) var(--ease-fast);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  animation: slideInUp 0.4s var(--ease-smooth) forwards;
+}
+
+.solve-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(191, 90, 242, 0.3);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.solve-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(191, 90, 242, 0.6), transparent);
+  border-radius: 18px 18px 0 0;
+}
+
+.solve-card.best-solve::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 214, 10, 0.9), transparent);
+}
+
+/* ── Profile Sections ── */
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #0A84FF, #BF5AF2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 28px rgba(10, 132, 255, 0.4), 0 0 0 3px rgba(10, 132, 255, 0.15);
+  flex-shrink: 0;
+}
+
+/* ── Cube Background Pattern ── */
+.cube-bg-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.03;
+}
+
+/* ── Glow Orbs ── */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.glow-orb-blue {
+  background: radial-gradient(circle, rgba(10, 132, 255, 0.4) 0%, transparent 70%);
+  animation: orbDrift 12s ease-in-out infinite;
+}
+
+.glow-orb-purple {
+  background: radial-gradient(circle, rgba(191, 90, 242, 0.35) 0%, transparent 70%);
+  animation: orbDrift2 15s ease-in-out infinite;
+}
+
+.glow-orb-green {
+  background: radial-gradient(circle, rgba(48, 209, 88, 0.3) 0%, transparent 70%);
+  animation: orbDrift 18s ease-in-out infinite reverse;
+}
+
+.glow-orb-orange {
+  background: radial-gradient(circle, rgba(255, 149, 0, 0.25) 0%, transparent 70%);
+  animation: orbDrift2 10s ease-in-out infinite 3s;
+}
+
+.glow-orb-red {
+  background: radial-gradient(circle, rgba(255, 59, 48, 0.2) 0%, transparent 70%);
+  animation: orbDrift 20s ease-in-out infinite 1s;
+}
+
+/* ── Section Background Ambiance ── */
+.page-bg-solve {
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(10, 132, 255, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 70%, rgba(90, 200, 250, 0.06) 0%, transparent 60%);
+}
+
+.page-bg-practice {
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(48, 209, 88, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 70%, rgba(52, 211, 153, 0.06) 0%, transparent 60%);
+}
+
+.page-bg-history {
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(191, 90, 242, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 70%, rgba(167, 68, 216, 0.06) 0%, transparent 60%);
+}
+
+.page-bg-stats {
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(255, 149, 0, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 70%, rgba(255, 214, 10, 0.06) 0%, transparent 60%);
+}
+
+/* ── Progress Bar ── */
+.progress-bar {
+  height: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.5s var(--ease-smooth);
+  background: linear-gradient(90deg, #0A84FF, #5AC8FA);
+}
+
+/* ── Move Step Cards ── */
+.move-step-card {
+  padding: 22px 24px;
+  border-radius: 18px;
+  border: 2px solid transparent;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.move-step-card.active {
+  animation: solvedCelebration 0.4s var(--ease-spring);
+}
+
+/* ── Countdown Timer ── */
+.countdown-number {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: clamp(4rem, 18vw, 8rem);
+  line-height: 1;
+  animation: countDownPop 0.3s var(--ease-spring);
+}
+
+@keyframes countDownPop {
+  0% { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Chart Bars ── */
+.chart-bar {
+  border-radius: 8px 8px 0 0;
+  transition: height 0.6s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px 8px 0 0;
+}
+
+/* ── Toggle Switch ── */
+.toggle-switch {
+  width: 52px;
+  height: 28px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.toggle-switch-knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  position: absolute;
+  top: 3px;
+  transition: left 0.25s var(--ease-spring);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* ── Solved Badge ── */
+.solved-glow {
+  box-shadow: 0 0 40px rgba(48, 209, 88, 0.5), inset 0 0 20px rgba(48, 209, 88, 0.15);
+}
+
+/* ── Shimmer Effect ── */
+.shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.06) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Responsive tuning ── */
+@media (max-width: 480px) {
+  .quick-action-card {
+    padding: 16px 14px;
+    min-height: 115px;
+  }
+
+  .celebration-modal {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .dashboard-actions-grid,
+  .dashboard-stats-grid { gap: 9px; }
+  .quick-action-card { padding: 13px 11px; min-height: 105px; }
+}
