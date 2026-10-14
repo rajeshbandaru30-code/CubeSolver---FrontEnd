@@ -45,6 +45,18 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: res.data.message || 'Registration failed.' };
     } catch (err) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        return {
+          success: false,
+          message: 'The cloud server took too long to respond. The instance may be waking up from sleep; please try again in a moment.'
+        };
+      }
+      if (!err.response) {
+        return {
+          success: false,
+          message: 'Cannot connect to backend server. Please verify your connection or wait while the cloud instance spins up.'
+        };
+      }
       const data = err.response?.data;
       let msg = 'Registration failed. Please try again.';
       if (data?.errors) {
@@ -71,6 +83,18 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: res.data.message || 'Login failed.' };
     } catch (err) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        return {
+          success: false,
+          message: 'The cloud server took too long to respond. The instance may be waking up from sleep; please try again in a moment.'
+        };
+      }
+      if (!err.response) {
+        return {
+          success: false,
+          message: 'Cannot connect to backend server. Please verify your connection or wait while the cloud instance spins up.'
+        };
+      }
       return {
         success: false,
         message: err.response?.data?.message || 'Invalid credentials.',

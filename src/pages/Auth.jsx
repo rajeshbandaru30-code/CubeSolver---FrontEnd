@@ -38,6 +38,7 @@ export default function Auth() {
   const [shakeError, setShakeError] = useState(false);
   const [authSuccess, setAuthSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [slowLoadingNotice, setSlowLoadingNotice] = useState(false);
 
   const { login, register, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -73,6 +74,9 @@ export default function Auth() {
     if (!isPasswordValid) { triggerError('Password must contain at least 6 characters.'); return; }
 
     setLoading(true);
+    setSlowLoadingNotice(false);
+    const slowTimer = setTimeout(() => setSlowLoadingNotice(true), 3500);
+
     try {
       const res = isLogin
         ? await login(username.trim(), password)
@@ -89,6 +93,8 @@ export default function Auth() {
     } catch {
       triggerError('An unexpected error occurred. Please try again.');
     } finally {
+      clearTimeout(slowTimer);
+      setSlowLoadingNotice(false);
       setLoading(false);
     }
   };
@@ -455,6 +461,17 @@ export default function Auth() {
                   </>
                 )}
               </button>
+
+              {slowLoadingNotice && (
+                <div className="animate-fade-in" style={{
+                  marginTop: '14px', fontSize: '0.78rem', color: '#5AC8FA',
+                  textAlign: 'center', background: 'rgba(10,132,255,0.08)',
+                  border: '1px solid rgba(10,132,255,0.22)', borderRadius: '10px',
+                  padding: '10px 14px', lineHeight: 1.45,
+                }}>
+                  Connecting to cloud backend (waking up instance, please wait a moment)…
+                </div>
+              )}
             </form>
           )}
 
