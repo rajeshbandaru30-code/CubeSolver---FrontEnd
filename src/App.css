@@ -533,3 +533,40 @@
   .dashboard-stats-grid { gap: 9px; }
   .quick-action-card { padding: 13px 11px; min-height: 105px; }
 }
+
+/* ── CubeSolve instrument console ── */
+.page-container {
+  min-height: calc(100vh - var(--header-height));
+}
+
+.page-container > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.solver-layout {
+  gap: 20px !important;
+}
+
+.solver-layout > * > div,
+.solver-layout > div > div {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.quick-action-card {
+  background: linear-gradient(145deg, rgba(29, 34, 48, 0.88), rgba(14, 17, 26, 0.82));
+}
+
+.dashboard-hero-grid h2,
+.page-container h1,
+.page-container h2 { text-wrap: balance; }
+
+@media (max-width: 900px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: flex !important; }
+  .page-container { padding-bottom: calc(var(--bottom-nav-height) + 16px); }
+}
+
+@media (min-width: 901px) {
+  .mobile-only { display: none !important; }
+}
