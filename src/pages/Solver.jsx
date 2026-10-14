@@ -117,7 +117,7 @@ export default function Solver() {
   }, []);
 
   return (
-    <div className="page-container page-bg-solve" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="page-container page-bg-solve solver-page" style={{ position: 'relative', overflow: 'hidden' }}>
 
       {/* Blue ambient glow */}
       <div className="orb-animate-2" style={{

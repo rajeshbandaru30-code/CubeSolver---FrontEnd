@@ -16,9 +16,9 @@
   --cube-white:  #F8FAFF;
 
   /* ── Base Background ── */
-  --bg-deep:    #0B1020;
-  --bg-surface: #111827;
-  --bg-raised:  #1a2235;
+  --bg-deep:    #09090D;
+  --bg-surface: #12131A;
+  --bg-raised:  #1B1D27;
 
   /* ── Section Color Identities ── */
   --solve-primary:    #0A84FF;

@@ -184,7 +184,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="page-container" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="page-container dashboard-page" style={{ position: 'relative', overflow: 'hidden' }}>
 
       {/* Background ambient glows */}
       <div className="orb-animate-1" style={{

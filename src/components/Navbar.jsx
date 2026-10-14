@@ -49,7 +49,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="app-header">
+    <header className="app-header premium-header">
       <div className="container flex-between" style={{ width: '100%' }}>
 
         {/* Brand Logo */}
