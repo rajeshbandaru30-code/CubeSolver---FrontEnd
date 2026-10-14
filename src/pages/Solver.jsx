@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cubeApi } from '../api/cubeApi';
 import CubeVisualizer from '../components/CubeVisualizer';
 import CubeInput from '../components/CubeInput';
@@ -6,7 +7,7 @@ import CubePlayer from '../components/CubePlayer';
 import {
   Play, Shuffle, CheckCircle, RotateCcw, Loader2,
   AlertCircle, CheckCheck, FlaskConical, ChevronDown, ChevronUp, Layers,
-  Puzzle, Zap,
+  Puzzle, Zap, Camera,
 } from 'lucide-react';
 import runTests from '../engine/cubeMoves.test';
 
@@ -25,6 +26,7 @@ const FACE_LABELS = [
 const FACE_COLORS = ['#F8FAFF', '#FF3B30', '#30D158', '#FFD60A', '#FF9500', '#0A84FF'];
 
 export default function Solver() {
+  const navigate = useNavigate();
   const [facelets, setFacelets] = useState(makeSolvedFacelets);
   const [viewMode, setViewMode] = useState('3D');
 
@@ -145,14 +147,30 @@ export default function Solver() {
             </p>
           </div>
 
-          <button
-            onClick={handleRunTests}
-            className="btn-secondary"
-            style={{ padding: '7px 14px', fontSize: '0.8rem', minHeight: '36px', borderRadius: '10px' }}
-            title="Run JS engine unit tests"
-          >
-            <FlaskConical size={14} /> Engine Tests
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button
+              onClick={() => navigate('/scanner')}
+              className="btn-primary"
+              style={{
+                padding: '7px 16px', fontSize: '0.82rem', minHeight: '36px', borderRadius: '10px',
+                display: 'flex', alignItems: 'center', gap: '6px',
+                background: 'linear-gradient(135deg, #0A84FF 0%, #0066cc 100%)',
+                boxShadow: '0 4px 14px rgba(10,132,255,0.4)',
+              }}
+              title="Scan physical cube with camera"
+            >
+              <Camera size={15} /> <span>Scan with Camera</span>
+            </button>
+
+            <button
+              onClick={handleRunTests}
+              className="btn-secondary"
+              style={{ padding: '7px 14px', fontSize: '0.8rem', minHeight: '36px', borderRadius: '10px' }}
+              title="Run JS engine unit tests"
+            >
+              <FlaskConical size={14} /> Engine Tests
+            </button>
+          </div>
         </div>
 
         {/* Test Results */}
@@ -347,6 +365,25 @@ export default function Solver() {
                   ) : (
                     <><Zap size={20} /><span>Solve Cube</span></>
                   )}
+                </button>
+
+                {/* Scan Cube with Camera */}
+                <button
+                  id="btn-camera-scan"
+                  className="btn-secondary"
+                  onClick={() => navigate('/scanner')}
+                  disabled={busy}
+                  style={{
+                    width: '100%',
+                    borderRadius: '12px',
+                    borderColor: 'rgba(90,200,250,0.3)',
+                    background: 'rgba(90,200,250,0.08)',
+                    color: '#5AC8FA',
+                    fontWeight: '700',
+                  }}
+                >
+                  <Camera size={17} color="#5AC8FA" />
+                  <span>Scan with Camera</span>
                 </button>
 
                 {/* Scramble */}

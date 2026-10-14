@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Puzzle, Dumbbell, BarChart2, User } from 'lucide-react';
+import { LayoutDashboard, Puzzle, Dumbbell, BarChart2, User, Camera } from 'lucide-react';
 
 // Color config per nav item
 const NAV_COLORS = {
   '/dashboard': { active: '#5AC8FA', glow: 'rgba(10,132,255,0.3)', bg: 'rgba(10,132,255,0.16)', border: 'rgba(10,132,255,0.35)' },
   '/':          { active: '#5AC8FA', glow: 'rgba(10,132,255,0.3)', bg: 'rgba(10,132,255,0.16)', border: 'rgba(10,132,255,0.35)' },
+  '/scanner':   { active: '#5AC8FA', glow: 'rgba(90,200,250,0.3)', bg: 'rgba(90,200,250,0.16)', border: 'rgba(90,200,250,0.35)' },
   '/solver':    { active: '#5AC8FA', glow: 'rgba(10,132,255,0.3)', bg: 'rgba(10,132,255,0.16)', border: 'rgba(10,132,255,0.35)' },
   '/practice':  { active: '#30D158', glow: 'rgba(48,209,88,0.3)',  bg: 'rgba(48,209,88,0.16)',  border: 'rgba(48,209,88,0.35)' },
   '/stats':     { active: '#FF9500', glow: 'rgba(255,149,0,0.3)',  bg: 'rgba(255,149,0,0.16)',  border: 'rgba(255,149,0,0.35)' },
@@ -22,6 +23,7 @@ export default function BottomNav() {
 
   const items = [
     { to: user ? '/dashboard' : '/', label: 'Home',     Icon: LayoutDashboard },
+    { to: '/scanner',                 label: 'Scan',     Icon: Camera },
     { to: '/solver',                  label: 'Solve',    Icon: Puzzle },
     { to: '/practice',                label: 'Practice', Icon: Dumbbell },
     { to: '/stats',                   label: 'Stats',    Icon: BarChart2 },

@@ -14,6 +14,7 @@ import Practice  from './pages/Practice';
 import History   from './pages/History';
 import Statistics from './pages/Statistics';
 import Profile   from './pages/Profile';
+import Scanner   from './pages/Scanner';
 
 /** Redirects unauthenticated users to /auth */
 function PrivateRoute({ children }) {
@@ -65,6 +66,9 @@ export default function App() {
         } />
         <Route path="/solver" element={
           <PrivateRoute><AppLayout><Solver /></AppLayout></PrivateRoute>
+        } />
+        <Route path="/scanner" element={
+          <PrivateRoute><AppLayout><Scanner /></AppLayout></PrivateRoute>
         } />
         <Route path="/practice" element={
           <PrivateRoute><AppLayout><Practice /></AppLayout></PrivateRoute>

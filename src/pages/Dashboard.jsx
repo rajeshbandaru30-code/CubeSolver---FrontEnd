@@ -6,7 +6,7 @@ import CubeVisualizer from '../components/CubeVisualizer';
 import {
   Puzzle, Dumbbell, Trophy, Clock, Zap, ArrowRight,
   TrendingUp, History as HistoryIcon, Loader2,
-  ChevronRight, User, BarChart2, Layers,
+  ChevronRight, User, BarChart2, Layers, Camera,
 } from 'lucide-react';
 
 function useAnimatedNumber(target, duration = 700) {
@@ -112,6 +112,16 @@ export default function Dashboard() {
   }
 
   const ACTION_CARDS = [
+    {
+      label: 'Scan Cube',
+      desc: 'Real-time 6-face camera scanner with 3D color reconstruction',
+      to: '/scanner',
+      Icon: Camera,
+      color: '#5AC8FA',
+      glow: 'rgba(90,200,250,0.18)',
+      border: 'rgba(90,200,250,0.3)',
+      cls: 'card-scan',
+    },
     {
       label: 'Solve Cube',
       desc: 'Step-by-step 3D solver with Kociemba engine',
@@ -285,7 +295,7 @@ export default function Dashboard() {
 
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
                 <button
-                  onClick={() => navigate('/solver')}
+                  onClick={() => navigate('/scanner')}
                   style={{
                     flex: '1 1 160px',
                     padding: '14px 22px',
@@ -304,17 +314,39 @@ export default function Dashboard() {
                     boxShadow: '0 8px 24px rgba(10,132,255,0.5)',
                     transition: 'all 0.2s ease',
                     minHeight: '50px',
-                    position: 'relative',
-                    overflow: 'hidden',
                   }}
                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(10,132,255,0.65)'; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(10,132,255,0.5)'; }}
-                  onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
-                  onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                >
+                  <Camera size={19} />
+                  <span>Scan Cube</span>
+                </button>
+
+                <button
+                  onClick={() => navigate('/solver')}
+                  style={{
+                    flex: '1 1 150px',
+                    padding: '14px 20px',
+                    fontSize: '0.98rem',
+                    borderRadius: '14px',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    color: '#fff',
+                    fontFamily: 'var(--font-main)',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.2s ease',
+                    minHeight: '50px',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <Puzzle size={19} />
-                  <span>Solve Cube</span>
-                  <ArrowRight size={16} />
+                  <span>2D/3D Solver</span>
                 </button>
 
                 <button

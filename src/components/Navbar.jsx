@@ -3,11 +3,12 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Puzzle, Dumbbell,
-  History, BarChart2, LogOut, User, LogIn,
+  History, BarChart2, LogOut, User, LogIn, Camera,
 } from 'lucide-react';
 
 const DESKTOP_NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard',  Icon: LayoutDashboard, color: '#5AC8FA' },
+  { to: '/scanner',   label: 'Scanner',    Icon: Camera,          color: '#5AC8FA' },
   { to: '/solver',    label: 'Solve Cube', Icon: Puzzle,          color: '#5AC8FA' },
   { to: '/practice',  label: 'Practice',   Icon: Dumbbell,        color: '#30D158' },
   { to: '/history',   label: 'History',    Icon: History,         color: '#BF5AF2' },
