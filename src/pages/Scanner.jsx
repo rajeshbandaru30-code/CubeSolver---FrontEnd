@@ -6,7 +6,9 @@ import FaceCaptureCard from '../components/scanner/FaceCaptureCard';
 import CubeReviewModal from '../components/scanner/CubeReviewModal';
 import ProgressSteps from '../components/scanner/ProgressSteps';
 import CalibrationModal from '../components/scanner/CalibrationModal';
+import RotationGuidanceScreen from '../components/scanner/RotationGuidanceScreen';
 import { SCAN_STEPS } from '../engine/cubeValidatorClient';
+import { calculateNextFace } from '../engine/orientationGuide';
 import {
   Camera, ArrowLeft, HelpCircle, Sliders, Volume2, VolumeX,
   AlertTriangle, RotateCcw, Layers, Sparkles, X,
@@ -44,6 +46,9 @@ export default function Scanner() {
 
   // Temporary captured stickers for the currently active face (before user confirmation)
   const [pendingStickers, setPendingStickers] = useState(null);
+
+  // Active 3D whole-cube rotation guidance state: { fromFaceIndex, toFaceIndex } or null
+  const [guidanceTransition, setGuidanceTransition] = useState(null);
 
   // Live real-time stickers & quality from camera feed
   const [liveStickers, setLiveStickers] = useState(null);
@@ -111,23 +116,46 @@ export default function Scanner() {
     setScannedFaces((prev) => {
       const updated = { ...prev, [currentStepIndex]: pendingStickers };
 
-      // If all 6 faces are confirmed, proceed to final cube review
+      // If all 6 faces are confirmed, proceed directly to final cube review
       const completedCount = Object.keys(updated).length;
       if (completedCount === 6) {
         setReviewMode(true);
+        setGuidanceTransition(null);
       } else {
-        // Find the next unconfirmed face
-        let nextIdx = (currentStepIndex + 1) % 6;
-        while (updated[nextIdx] && Object.keys(updated).length < 6) {
-          nextIdx = (nextIdx + 1) % 6;
+        // Calculate the next face in the ergonomic scanning sequence
+        const nextIdx = calculateNextFace(currentStepIndex, updated);
+        if (nextIdx !== null) {
+          setGuidanceTransition({
+            fromFaceIndex: currentStepIndex,
+            toFaceIndex: nextIdx,
+          });
+        } else {
+          setReviewMode(true);
+          setGuidanceTransition(null);
         }
-        setCurrentStepIndex(nextIdx);
       }
       return updated;
     });
 
     setPendingStickers(null);
   }, [pendingStickers, currentStepIndex, triggerFeedback]);
+
+  // When user is ready to scan next face after watching 3D rotation guidance
+  const handleGuidanceReady = useCallback(() => {
+    if (!guidanceTransition) return;
+    triggerFeedback(620, 0.08);
+    setCurrentStepIndex(guidanceTransition.toFaceIndex);
+    setGuidanceTransition(null);
+    setPendingStickers(null);
+  }, [guidanceTransition, triggerFeedback]);
+
+  // When user clicks back to previous face from rotation guidance screen
+  const handleGuidanceBack = useCallback(() => {
+    if (!guidanceTransition) return;
+    triggerFeedback(440, 0.08);
+    setCurrentStepIndex(guidanceTransition.fromFaceIndex);
+    setGuidanceTransition(null);
+  }, [guidanceTransition, triggerFeedback]);
 
   // Convert scanned faces to standard 54-element facelet array
   const reconstructedFacelets = useMemo(() => {
@@ -169,6 +197,7 @@ export default function Scanner() {
   const handleRescanFace = useCallback((faceIndex) => {
     setCurrentStepIndex(faceIndex);
     setPendingStickers(null);
+    setGuidanceTransition(null);
     setReviewMode(false);
   }, []);
 
@@ -176,6 +205,7 @@ export default function Scanner() {
   const handleResetAll = useCallback(() => {
     setScannedFaces({});
     setPendingStickers(null);
+    setGuidanceTransition(null);
     setCurrentStepIndex(0);
     setReviewMode(false);
   }, []);
@@ -334,6 +364,19 @@ export default function Scanner() {
               onResetAll={handleResetAll}
             />
           </div>
+        ) : guidanceTransition ? (
+          /* DEDICATED 3D ROTATION GUIDANCE SCREEN: Smooth whole-cube rotation into recommended orientation */
+          <div className="animate-fade-in">
+            <RotationGuidanceScreen
+              fromFaceIndex={guidanceTransition.fromFaceIndex}
+              toFaceIndex={guidanceTransition.toFaceIndex}
+              scannedFaces={scannedFaces}
+              onReady={handleGuidanceReady}
+              onBackToPrevious={handleGuidanceBack}
+              stepNumber={Object.keys(scannedFaces).length + 1}
+              totalSteps={6}
+            />
+          </div>
         ) : (
           /* SCANNING MODE: Guided 6-Face Camera Workflow */
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -346,6 +389,7 @@ export default function Scanner() {
               onSelectFace={(idx) => {
                 setCurrentStepIndex(idx);
                 setPendingStickers(null);
+                setGuidanceTransition(null);
               }}
             />
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Check, RotateCcw, AlertTriangle, Palette, UserCheck, Sparkles, ChevronRight } from 'lucide-react';
+import { Check, RotateCcw, RotateCw, AlertTriangle, Palette, UserCheck, Sparkles, ChevronRight } from 'lucide-react';
 import { CUBE_COLORS } from '../../engine/colorDetector';
+import { rotateGrid90 } from '../../engine/orientationGuide';
 
 /**
  * FaceCaptureCard
@@ -49,6 +50,13 @@ export default function FaceCaptureCard({
     });
 
     onUpdateStickers(updated);
+    setEditingIndex(null);
+  };
+
+  // Rotate face stickers 90° CW or CCW if user scanned physical cube tilted
+  const handleRotateGrid = (dir) => {
+    const rotated = rotateGrid90(stickers, dir);
+    onUpdateStickers(rotated);
     setEditingIndex(null);
   };
 
@@ -234,6 +242,58 @@ export default function FaceCaptureCard({
             </button>
           );
         })}
+      </div>
+
+      {/* 90° Facelet Orientation Adjustment Controls */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          background: 'rgba(255, 255, 255, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '12px',
+          padding: '6px 10px',
+        }}
+      >
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+          Orient Face:
+        </span>
+
+        <button
+          type="button"
+          onClick={() => handleRotateGrid('CCW')}
+          className="btn-secondary"
+          style={{
+            padding: '4px 8px',
+            borderRadius: '8px',
+            fontSize: '0.72rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+          title="Rotate Face 90° Counter-Clockwise"
+        >
+          <RotateCcw size={12} /> 90° CCW
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleRotateGrid('CW')}
+          className="btn-secondary"
+          style={{
+            padding: '4px 8px',
+            borderRadius: '8px',
+            fontSize: '0.72rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+          title="Rotate Face 90° Clockwise"
+        >
+          <RotateCw size={12} /> 90° CW
+        </button>
       </div>
 
       {/* Quick Color Palette with Accessible Labels (Appears when sticker is tapped) */}

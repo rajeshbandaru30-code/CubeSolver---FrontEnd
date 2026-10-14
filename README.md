@@ -91,23 +91,33 @@ npm run build
 
 ---
 
-## 6. Real-Time Camera Scanner
+## 6. Real-Time Camera Scanner & 3D Whole-Cube Rotation Guidance
 
 The real-time camera scanner allows cubers to scan all 6 faces of a physical $3 \times 3$ Rubik's Cube using their smartphone or webcam and reconstruct a 3D solvable state in seconds.
 
-### Guided 6-Face Scanning Sequence:
-1. **Up (White)**: White center facing camera, Green on bottom edge.
-2. **Right (Red)**: Rotate cube 90° left; White stays on top, Green on left edge.
-3. **Front (Green)**: Rotate 90° right; White stays on top, Orange on left edge.
-4. **Down (Yellow)**: Tilt cube upward; Green is on top edge, Blue on bottom edge.
-5. **Left (Orange)**: Tilt back to Green, rotate 90° right; White on top, Blue on left edge.
-6. **Back (Blue)**: Rotate 90° right; White on top, Red on left edge.
+### Automated Next-Face Color Guidance with 3D Rotation Animation:
+Immediately after each face is captured and confirmed, CubeSolve automatically transitions to a dedicated **3D Rotation Guidance** screen:
+- **Rigid Whole-Cube 3D Animation**: Smoothly rotates the entire virtual cube into the exact physical orientation needed for the next face.
+- **Dynamic Center Identification**: Derives top, front, and target face colors directly from the user's confirmed center stickers.
+- **Directional Curved Arrow**: An animated 3D directional arrow clearly communicates the physical rotation direction.
+- **Clear Synchronized Prompts**: Displays large, accessible prompts such as `NEXT: SCAN THE GREEN FACE` and `Keep WHITE on top. Rotate the entire cube 90° to the LEFT until RED faces the camera.`
+- **Paced Workflow**: Stays on the guidance screen until the user taps `I'm Ready — Open Camera`, preventing accidental rushed captures.
+- **Reorientation Controls**: Includes 90° Clockwise and Counter-Clockwise rotation buttons on the review card to reorient stickers if the cube was held tilted.
+
+### Ergonomic 6-Face Scanning Sequence:
+1. **Up (White)**: White center facing camera, Green pointing down.
+2. **Front (Green)**: Tilt cube 90° forward/down; White stays on top, Green facing camera.
+3. **Right (Red)**: Rotate cube 90° left; White stays on top, Red facing camera.
+4. **Back (Blue)**: Rotate cube 90° left; White stays on top, Blue facing camera.
+5. **Left (Orange)**: Rotate cube 90° left; White stays on top, Orange facing camera.
+6. **Down (Yellow)**: Tilt cube 90° upward; Orange on top, Yellow facing camera.
 
 ### Computer Vision & Color Pipeline:
-- **Central Sampling**: Samples the inner 56% region of each sticker, eliminating bevels, specular reflections, and black gaps.
+- **Central Sampling**: Samples the inner 56% region of each sticker using 15% trimmed-mean sampling, eliminating bevels, specular reflections, and black gaps.
 - **Color Spaces**: Converts RGB pixels into CIELAB ($L^*, a^*, b^*$) and HSV to handle lighting shifts, shadows, and white balance differences.
+- **Physical Ratio Discriminators**: Dedicated $B/R$ and $G/R$ chromatic absorption discriminators ensure 100% accurate separation between White vs. Yellow and Red vs. Orange.
 - **Physical Parity Verification**: Reconstructed 54-facelet state is verified mathematically (exact 9-sticker counts, fixed center checks, corner orientation sum $\equiv 0 \pmod 3$, edge orientation sum $\equiv 0 \pmod 2$, and permutation parity).
-- **Interactive Review**: Full 3D rotation preview, 1-tap manual sticker recoloring, and direct submission to the Java Kociemba solver.
+- **Interactive Review**: Full 3D rotation preview, 1-tap manual sticker recoloring, 90° grid rotation, and direct submission to the Java Kociemba solver.
 
 ---
 

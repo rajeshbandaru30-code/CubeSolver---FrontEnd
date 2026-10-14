@@ -107,6 +107,39 @@ export default function ScanOverlay({
         <span>{q.badge}</span>
       </div>
 
+      {/* Prominent Target Face & Orientation Banner */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '16px',
+          right: '16px',
+          background: 'rgba(11, 16, 32, 0.9)',
+          backdropFilter: 'blur(10px)',
+          border: `1.5px solid ${stepInfo?.centerHex || '#0A84FF'}`,
+          padding: '4px 14px',
+          borderRadius: '100px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontSize: '0.75rem',
+          fontWeight: '800',
+          color: '#F8FAFF',
+          boxShadow: `0 0 14px ${stepInfo?.centerHex || '#0A84FF'}44`,
+          zIndex: 6,
+        }}
+      >
+        <div
+          style={{
+            width: '9px',
+            height: '9px',
+            borderRadius: '50%',
+            background: stepInfo?.centerHex || '#FFFFFF',
+            boxShadow: `0 0 8px ${stepInfo?.centerHex || '#FFFFFF'}`,
+          }}
+        />
+        <span>Target: {stepInfo?.name}</span>
+      </div>
+
       {/* Main 3x3 Scanning Box Container */}
       <div
         style={{
