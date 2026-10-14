@@ -51,6 +51,7 @@ export default function CubeReviewModal({
 
   // Perform backend validation check via /api/cube/validate
   const handleBackendValidate = async () => {
+    if (isValidatingApi || isSolving) return;
     if (!validation.valid) {
       setError(validation.errors[0] || 'Cube configuration does not satisfy physical parity laws.');
       return;
@@ -74,6 +75,7 @@ export default function CubeReviewModal({
 
   // Solve Cube using Spring Boot REST API
   const handleSolve = async () => {
+    if (isSolving || isValidatingApi) return;
     if (!validation.valid) {
       setError('Please resolve all validation errors before solving.');
       return;

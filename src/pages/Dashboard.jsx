@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { historyApi } from '../api/cubeApi';
-import CubeVisualizer from '../components/CubeVisualizer';
 import {
   Puzzle, Dumbbell, Trophy, Clock, Zap, ArrowRight,
   TrendingUp, History as HistoryIcon, Loader2,
@@ -44,13 +43,25 @@ export default function Dashboard() {
     async function loadData() {
       setLoading(true); setError(null);
       try {
-        const solvesRes = await historyApi.getMy();
-        const list = Array.isArray(solvesRes.data) ? solvesRes.data : [];
-        if (isMounted) setSolves(list);
-        try {
-          const statsRes = await historyApi.getMyStats();
-          if (isMounted) setStats(statsRes.data);
-        } catch {
+        // Fetch solves and stats concurrently to avoid sequential round-trips
+        const [solvesResult, statsResult] = await Promise.allSettled([
+          historyApi.getMy(),
+          historyApi.getMyStats()
+        ]);
+
+        let list = [];
+        if (solvesResult.status === 'fulfilled') {
+          list = Array.isArray(solvesResult.value.data) ? solvesResult.value.data : [];
+          if (isMounted) setSolves(list);
+        } else if (statsResult.status === 'rejected') {
+          // Both failed
+          throw solvesResult.reason;
+        }
+
+        if (statsResult.status === 'fulfilled' && statsResult.value?.data) {
+          if (isMounted) setStats(statsResult.value.data);
+        } else {
+          // Fallback to computing summary from list if stats endpoint failed
           const total = list.length;
           if (isMounted) setStats({
             totalSolves: total,

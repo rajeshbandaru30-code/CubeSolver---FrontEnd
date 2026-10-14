@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import CubeVisualizer from '../components/CubeVisualizer';
 import {
   Lock, User, Mail, ArrowRight, Loader2,
   Eye, EyeOff, CheckCircle2, AlertCircle, Check,
@@ -64,6 +63,7 @@ export default function Auth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError('');
     setTouched({ username: true, email: true, password: true });
 

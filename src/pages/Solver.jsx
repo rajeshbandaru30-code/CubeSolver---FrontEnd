@@ -52,6 +52,7 @@ export default function Solver() {
   }, []);
 
   const handleScramble = useCallback(async () => {
+    if (busy) return;
     setIsScrambling(true);
     clearResults();
     setPlayerOpen(false);
@@ -63,9 +64,10 @@ export default function Solver() {
     } finally {
       setIsScrambling(false);
     }
-  }, []);
+  }, [busy]);
 
   const handleValidate = useCallback(async () => {
+    if (busy) return;
     setIsValidating(true);
     setError(null);
     setSolution(null);
@@ -78,9 +80,10 @@ export default function Solver() {
     } finally {
       setIsValidating(false);
     }
-  }, [facelets]);
+  }, [busy, facelets]);
 
   const handleSolve = useCallback(async () => {
+    if (busy) return;
     setIsSolving(true);
     clearResults();
     setPlayerOpen(false);
@@ -102,7 +105,7 @@ export default function Solver() {
     } finally {
       setIsSolving(false);
     }
-  }, [facelets]);
+  }, [busy, facelets]);
 
   const handleRunTests = useCallback(() => {
     try {
