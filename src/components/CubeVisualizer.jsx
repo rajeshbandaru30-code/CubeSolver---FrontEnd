@@ -350,6 +350,45 @@ function RubiksCube3D({ faceletColors, animatingMove, onAnimationComplete, autoR
   );
 }
 
+// ── WebGL Context Loss & Render Error Boundary ──
+class WebGLErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(err) {
+    console.warn('[CubeVisualizer] 3D canvas render issue caught safely:', err?.message || err);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          width: '100%', height: '100%', minHeight: '140px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--text-secondary, #94a3b8)', fontSize: '0.82rem', textAlign: 'center', padding: '16px'
+        }}>
+          <span style={{ marginBottom: '8px' }}>3D preview paused</span>
+          <button
+            type="button"
+            onClick={() => this.setState({ hasError: false })}
+            style={{
+              padding: '4px 12px', background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.18)', borderRadius: '8px',
+              color: '#ffffff', cursor: 'pointer', fontSize: '0.78rem'
+            }}
+          >
+            Reload 3D
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // ── Public Component ──
 export default function CubeVisualizer({
   facelets,
@@ -405,40 +444,57 @@ export default function CubeVisualizer({
         background: 'radial-gradient(circle at 50% 40%, rgba(30, 41, 59, 0.4) 0%, rgba(8, 11, 20, 0.6) 80%)',
       }}
     >
-      <Canvas
-        camera={{ position: [3.8, 3.8, 3.8], fov: 44 }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        {/* Multi-point studio lighting for optimal visibility */}
-        <ambientLight intensity={1.1} />
-        {/* Key light */}
-        <directionalLight position={[7, 12, 7]} intensity={1.4} />
-        {/* Fill light */}
-        <directionalLight position={[-7, -8, -7]} intensity={0.7} />
-        {/* Rim / backlight from left with subtle cyan glow */}
-        <directionalLight position={[-6, 7, 7]} intensity={0.8} color="#38bdf8" />
-        {/* Warm bottom fill */}
-        <directionalLight position={[6, -6, -6]} intensity={0.5} color="#f59e0b" />
+      <WebGLErrorBoundary>
+        <Canvas
+          camera={{ position: [3.8, 3.8, 3.8], fov: 44 }}
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance',
+            failIfMajorPerformanceCaveat: false,
+          }}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener(
+              'webglcontextlost',
+              (e) => {
+                e.preventDefault();
+                console.warn('[CubeVisualizer] WebGL context lost; awaiting context restoration.');
+              },
+              false
+            );
+          }}
+        >
+          {/* Multi-point studio lighting for optimal visibility */}
+          <ambientLight intensity={1.1} />
+          {/* Key light */}
+          <directionalLight position={[7, 12, 7]} intensity={1.4} />
+          {/* Fill light */}
+          <directionalLight position={[-7, -8, -7]} intensity={0.7} />
+          {/* Rim / backlight from left with subtle cyan glow */}
+          <directionalLight position={[-6, 7, 7]} intensity={0.8} color="#38bdf8" />
+          {/* Warm bottom fill */}
+          <directionalLight position={[6, -6, -6]} intensity={0.5} color="#f59e0b" />
 
-        <RubiksCube3D
-          faceletColors={faceletColors}
-          animatingMove={animatingMove}
-          onAnimationComplete={onAnimationComplete}
-          autoRotate={autoRotate}
-          isSolved={isSolved}
-        />
-
-        {enableOrbit && (
-          <OrbitControls
-            enableZoom={enableZoom}
-            enablePan={false}
-            enableDamping={true}
-            dampingFactor={0.06}
-            minPolarAngle={Math.PI / 10}
-            maxPolarAngle={Math.PI * 0.75}
+          <RubiksCube3D
+            faceletColors={faceletColors}
+            animatingMove={animatingMove}
+            onAnimationComplete={onAnimationComplete}
+            autoRotate={autoRotate}
+            isSolved={isSolved}
           />
-        )}
-      </Canvas>
+
+          {enableOrbit && (
+            <OrbitControls
+              enableZoom={enableZoom}
+              enablePan={false}
+              enableDamping={true}
+              dampingFactor={0.06}
+              minPolarAngle={Math.PI / 10}
+              maxPolarAngle={Math.PI * 0.75}
+            />
+          )}
+        </Canvas>
+      </WebGLErrorBoundary>
     </div>
   );
 }

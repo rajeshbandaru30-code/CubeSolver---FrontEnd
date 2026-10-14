@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { historyApi } from '../api/cubeApi';
+import CubeVisualizer from '../components/CubeVisualizer';
 import {
   Puzzle, Dumbbell, Trophy, Clock, Zap, ArrowRight,
   TrendingUp, History as HistoryIcon, Loader2,
